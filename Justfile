@@ -15,7 +15,7 @@ set dotenv-path := ".env"
 set export := true
 
 # constants
-DOCKER_CMD := "docker compose -f docker-compose.yaml"
+DOCKER_CMD := "docker compose -f docker-compose.yml"
 
 
 # Default Shows the default commands
@@ -79,7 +79,7 @@ restart:
 
 [group('migration')]
 @migrate-add target:
-    @sea-orm-cli migrate generate "{{target}}"
+  php  yii migrate/create "{{target}}"
 
 @generate-entities:
     sea-orm-cli generate entity --database-url="$DATABASE_URL" --with-serde both -o src/entities
