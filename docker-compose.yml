@@ -1,21 +1,23 @@
 services:
-  app:
-    image: yiisoftware/yii2-php:8.5-apache-latest
-    volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
-    ports:
-      - '${PORT}:80'
-    platform: linux/amd64
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-        "if [ \"$(stat -c '%U' /app/runtime)\" != 'www-data' ] || [ \"$(stat -c '%U' /app/web/assets)\" != 'www-data' ]; then chown -R www-data:www-data /app/runtime /app/web/assets && chmod -R ug+rwX /app/runtime /app/web/assets; fi && runuser -u www-data -- touch /app/runtime/test_write && rm /app/runtime/test_write && exit 0 || exit 1",
-      ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+  # app:
+  #   image: yiisoftware/yii2-php:8.5-apache-latest
+  #   volumes:
+  #     - ~/.composer-docker/cache:/root/.composer/cache:delegated
+  #     - ./:/app:delegated
+  #   ports:
+  #     - '${PORT}:80'
+  #   platform: linux/amd64
+  #   healthcheck:
+  #     test: [
+  #       "CMD-SHELL",
+  #       "if [ \"$(stat -c '%U' /app/runtime)\" != 'www-data' ] || [ \"$(stat -c '%U' /app/web/assets)\" != 'www-data' ]; then chown -R www-data:www-data /app/runtime /app/web/assets && chmod -R ug+rwX /app/runtime /app/web/assets; fi && runuser -u www-data -- touch /app/runtime/test_write && rm /app/runtime/test_write && exit 0 || exit 1",
+  #     ]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
+  #   env_file:
+  #     - .env
       
   redis:
     image: redis:7-alpine
@@ -26,8 +28,8 @@ services:
       - "7963:6379"
     volumes:
       - redis-data:/data
-    networks:
-      - internal
+    # networks:
+    #   - internal
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -43,8 +45,8 @@ services:
       RI_REDIS_PORT: 6379
     volumes:
       - redisinsight-data:/data
-    networks:
-      - internal
+    # networks:
+    #   - internal
     ports:
       - 5540:5540
 
@@ -57,7 +59,7 @@ services:
       MYSQL_USER: ${DATABASE_USERNAME}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - '3309:3306'
+      - '${DATABASE_PORT}:3306'
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -66,8 +68,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    networks:
-      - internal
+    # networks:
+    #   - internal
 
       
   phpmyadmin:
@@ -81,7 +83,7 @@ services:
       PMA_USER: ${DATABASE_USERNAME}
       PMA_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - '8050:80'
+      - '8087:80'
     
 volumes:
   cargo-target:
@@ -90,7 +92,7 @@ volumes:
   redis-data:
   redisinsight-data:
 
-networks:
-  internal:
-    name: locale_app
-    driver: bridge
+# networks:
+#   internal:
+#     name: locale_app
+#     driver: bridge

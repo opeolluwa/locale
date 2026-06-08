@@ -30,7 +30,7 @@ DOCKER_CMD := "docker compose -f docker-compose.yml"
 
 @dev:
     {{ DOCKER_CMD }} up -d
-    @just logs
+    php yii serve 
 
 # see docker logs, this is called internally when you run just dev
 @logs:
