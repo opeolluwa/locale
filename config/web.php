@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $redis = require __DIR__ . '/redis.php';
+$seeders = require __DIR__ . '/seeder.php';
 
 $config = [
     'id' => 'basic',
